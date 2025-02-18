@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - npm install -g @angular/cli  # Install Angular CLI
+      - npm install  # Install project dependencies
+  build:
+    commands:
+      - ng build --prod  # Build Angular project in production mode
+  post_build:
+    commands:
+      - echo "Uploading build artifacts to S3..."
+      - aws s3 cp dist/angular-eapp/ s3://angular-eapp/angular-folder/ --recursive  # Upload to S3
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: dist/your-angular-project-name  # Local directory for artifacts
+  discard-paths: yes  # Optionally discard paths for flat upload
