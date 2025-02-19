@@ -3,8 +3,16 @@ os: linux
 files:
   - source: /
     destination: /var/www/html/angular-app
+
+permissions:
+  - object: /var/www/html/angular-app
+    owner: ubuntu
+    group: ubuntu
+    mode: 755
+
 hooks:
   AfterInstall:
     - location: scripts/start.sh
       timeout: 300
-      runas: root
+      runas: ubuntu
+
