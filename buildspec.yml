@@ -33,7 +33,7 @@ artifacts:
     - scripts/start.sh
     - "**/*"
   discard-paths: no
-  base-directory: dist/ecommerce/
+  base-directory: .
 
 
 
