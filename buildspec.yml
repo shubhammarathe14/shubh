@@ -3,18 +3,16 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "Installing Node.js 16"
+      - echo "Installing Node.js 16..."
       - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
       - sudo apt install -y nodejs
       - node -v
       - npm -v
-      - echo "Cleaning up old dependencies..."
+      - echo "Cleaning old dependencies..."
       - rm -rf node_modules package-lock.json
       - npm cache clean --force
-      - echo "Installing Angular CLI"
-      - npm install -g @angular/cli@15.2.6
-      - echo "Installing project dependencies"
-      - npm ci --legacy-peer-deps
+      - echo "Installing dependencies..."
+      - npm install --legacy-peer-deps
 
   build:
     commands:
