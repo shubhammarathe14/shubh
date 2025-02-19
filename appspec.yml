@@ -4,6 +4,7 @@ os: linux
 files:
   - source: /
     destination: /var/www/html/angular-app
+    overwrite: yes
 
 permissions:
   - object: /var/www/html/angular-app
