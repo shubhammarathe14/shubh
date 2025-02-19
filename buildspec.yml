@@ -3,32 +3,34 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "Installing Node.js"
+      - echo "Installing Node.js 16"
       - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
       - sudo apt install -y nodejs
       - node -v
+      - npm -v
+      - echo "Cleaning up old dependencies..."
+      - rm -rf node_modules package-lock.json
+      - npm cache clean --force
       - echo "Installing Angular CLI"
       - npm install -g @angular/cli@15.2.6
-      - npm install  # Install project dependencies
+      - echo "Installing project dependencies"
+      - npm ci --legacy-peer-deps
 
   build:
     commands:
-      - echo "Building Angular project"
-      - ng build --configuration=production  # Build for production
+      - echo "Building Angular project..."
+      - ng build --configuration=production
 
   post_build:
     commands:
-      - echo "Uploading build artifacts to S3..."
-      - aws s3 cp dist/your-angular-project-name/ s3://your-s3-bucket-name/angular-folder/ --recursive
-      - echo "Creating deployment package"
-      - mkdir -p deploy
-      - cp -r dist/your-angular-project-name/* deploy/
-      - zip -r deploy.zip deploy/
-      - echo "Uploading deployment package to S3"
-      - aws s3 cp deploy.zip s3://angular-eapp/angular-folder/deploy.zip
+      - echo "Uploading build artifacts..."
+      - aws s3 cp dist/shubh/ s3://angular-eapp/angular-folder/ --recursive
 
 artifacts:
   files:
-    - deploy.zip
-  discard-paths: yes
+    - '**/*'
+  base-directory: dist/shubh/
+
+
+   
 
