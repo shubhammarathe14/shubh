@@ -17,21 +17,23 @@ phases:
     commands:
       - echo "Building Angular project..."
       - ng build --configuration=production
+      - echo "Moving appspec.yml and scripts to dist/ecommerce/..."
+      - cp appspec.yml dist/ecommerce/
+      - mkdir -p dist/ecommerce/scripts
+      - cp scripts/start.sh dist/ecommerce/scripts/
 
   post_build:
     commands:
-      - echo "Ensuring appspec.yml is included..."
-      - cp appspec.yml dist/ecommerce/  # Move appspec.yml to dist/ecommerce
       - echo "Uploading build artifacts to S3..."
       - aws s3 cp dist/ecommerce/ s3://angular-eapp/angular-folder/ --recursive
-      - aws s3 cp appspec.yml s3://angular-eapp/angular-folder/appspec.yml  # Ensure appspec.yml is in S3
 
 artifacts:
   files:
-    - appspec.yml 
-    - scripts/start.sh   # Include appspec.yml
+    - appspec.yml
+    - scripts/start.sh
     - "**/*"
-  base-directory: dist/ecommerce/  # Ensure dist/ecommerce is the base directory
+  discard-paths: no
+  base-directory: dist/ecommerce/
 
 
 
