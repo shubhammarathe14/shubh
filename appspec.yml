@@ -1,10 +1,9 @@
 version: 0.0
 os: linux
-
 files:
   - source: /
     destination: /var/www/html/angular-app
-    overwrite: yes
+    overwrite: yes  # Ensure files are replaced
 
 permissions:
   - object: /var/www/html/angular-app
@@ -16,11 +15,12 @@ hooks:
   BeforeInstall:
     - location: scripts/cleanup.sh
       timeout: 300
-      runas: root
+      runas: root  # Run cleanup with root privileges
   AfterInstall:
     - location: scripts/start.sh
       timeout: 300
       runas: ubuntu
+
 
 
 
