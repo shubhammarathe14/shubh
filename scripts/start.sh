@@ -1,38 +1,28 @@
 #!/bin/bash
-set -e
+set -e  # Exit on error
 
 echo "Starting deployment..."
 
-# Ensure deployment directory exists
+# Ensure directory exists with correct permissions
 sudo mkdir -p /var/www/angular-app
 sudo chown -R ubuntu:ubuntu /var/www/angular-app
+sudo chmod -R 755 /var/www/angular-app
 
-# Copy deployment files to the correct directory
 echo "Copying application files..."
-cp -r * /var/www/angular-app/
+rsync -av --exclude='.git' --exclude='node_modules' /opt/codedeploy-agent/deployment-root/latest/deployment-archive/ /var/www/angular-app/
 
-# Navigate to the deployment directory
-cd /var/www/angular-app || exit
-
-# Check if package.json exists
-if [ ! -f package.json ]; then
-  echo "Error: package.json not found in /var/www/angular-app!"
-  exit 1
-fi
-
-# Install dependencies
 echo "Installing dependencies..."
+cd /var/www/angular-app
 npm install --legacy-peer-deps
 
-# Build the Angular application
 echo "Building Angular application..."
-npx ng build --configuration=production
+ng build --configuration=production
 
-# Serve the Angular app
 echo "Starting Angular application..."
 nohup npx http-server -p 80 dist/ecommerce/ &
 
 echo "Deployment complete!"
+
 
 
 
