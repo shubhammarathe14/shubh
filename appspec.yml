@@ -1,24 +1,25 @@
 version: 0.0
 os: linux
+
 files:
   - source: /
     destination: /var/www/html/angular-app
-    overwrite: yes
 
 permissions:
   - object: /var/www/html/angular-app
     owner: ubuntu
     group: ubuntu
     mode: 755
-  - object: /var/www/html/angular-app/.git
-    owner: ubuntu
-    group: ubuntu
-    mode: 700
 
 hooks:
+  BeforeInstall:
+    - location: scripts/cleanup.sh
+      timeout: 300
+      runas: root
   AfterInstall:
     - location: scripts/start.sh
       timeout: 300
       runas: ubuntu
+
 
 
