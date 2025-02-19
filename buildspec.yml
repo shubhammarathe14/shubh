@@ -3,26 +3,32 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "Checking Node.js version"
-      - node -v  # Check Node version
-      - echo "Clearing npm cache"
-      - npm cache clean --force  # Clear npm cache
+      - echo "Installing Node.js"
+      - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+      - sudo apt install -y nodejs
+      - node -v
       - echo "Installing Angular CLI"
-      - npm install -g @angular/cli  # Install Angular CLI globally
-      - echo "Running npm install"
+      - npm install -g @angular/cli@15.2.6
       - npm install  # Install project dependencies
+
   build:
     commands:
       - echo "Building Angular project"
-      - ng build --prod  # Build Angular project
+      - ng build --configuration=production  # Build for production
+
   post_build:
     commands:
       - echo "Uploading build artifacts to S3..."
-      - aws s3 cp dist/shubh/ s3://angular-eapp/angular-folder/ --recursive  # Upload to S3
+      - aws s3 cp dist/your-angular-project-name/ s3://your-s3-bucket-name/angular-folder/ --recursive
+      - echo "Creating deployment package"
+      - mkdir -p deploy
+      - cp -r dist/your-angular-project-name/* deploy/
+      - zip -r deploy.zip deploy/
+      - echo "Uploading deployment package to S3"
+      - aws s3 cp deploy.zip s3://angular-eapp/angular-folder/deploy.zip
 
 artifacts:
   files:
-    - '**/*'
-  base-directory: dist/shubh  # Path to the build output directory
-  discard-paths: yes  # Optionally discard paths for flat upload
+    - deploy.zip
+  discard-paths: yes
 
