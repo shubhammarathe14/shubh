@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e  # Exit on error
-echo "Cleaning up old deployment..."
-sudo rm -rf /var/www/html/angular-app
+
 
 echo "Starting deployment..."
 
