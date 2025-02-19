@@ -5,37 +5,25 @@ set -e
 
 echo "Starting deployment..."
 
-# Ensure deployment directory exists
-mkdir -p /var/www/angular-app
+# Create the directory with proper permissions
+sudo mkdir -p /var/www/angular-app
+sudo chown -R $USER:$USER /var/www/angular-app
+
+# Navigate to the deployment directory
 cd /var/www/angular-app || exit
 
 # Install dependencies
-if [ -f "package.json" ]; then
-    echo "Installing dependencies..."
-    npm install --legacy-peer-deps
-else
-    echo "Error: package.json not found!"
-    exit 1
-fi
-
-# Ensure Angular CLI is installed
-if ! command -v ng &> /dev/null; then
-    echo "Installing Angular CLI..."
-    npm install -g @angular/cli@15.2.6
-fi
+echo "Installing dependencies..."
+sudo npm install --legacy-peer-deps
 
 # Build the Angular application
 echo "Building Angular application..."
-ng build --configuration=production
+sudo ng build --configuration=production
 
-# Ensure build directory exists
-if [ ! -d "./dist/ecommerce/" ]; then
-    echo "Error: Build directory not found!"
-    exit 1
-fi
-
-# Serve the Angular app using a lightweight HTTP server
+# Serve the Angular app
 echo "Starting Angular application..."
-nohup npx http-server -p 80 ./dist/ecommerce/ > /dev/null 2>&1 &
+nohup npx http-server -p 80 dist/ecommerce/ &
 
 echo "Deployment complete!"
+
+
