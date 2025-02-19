@@ -8,9 +8,8 @@ phases:
       - sudo apt install -y nodejs
       - node -v
       - npm -v
-      - echo "Cleaning old dependencies..."
-      - rm -rf node_modules package-lock.json
-      - npm cache clean --force
+      - echo "Installing Angular CLI..."
+      - npm install -g @angular/cli@15.2.6
       - echo "Installing dependencies..."
       - npm install --legacy-peer-deps
 
@@ -21,13 +20,14 @@ phases:
 
   post_build:
     commands:
-      - echo "Uploading build artifacts..."
-      - aws s3 cp dist/shubh/ s3://angular-eapp/angular-folder/ --recursive
+      - echo "Uploading build artifacts to S3..."
+      - aws s3 cp dist/angular-eapp/ s3://angular-eapp/angular-folder/ --recursive
 
 artifacts:
   files:
     - '**/*'
-  base-directory: dist/shubh/
+  base-directory: dist/angular-eapp/
+
 
 
    
