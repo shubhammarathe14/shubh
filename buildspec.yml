@@ -22,12 +22,10 @@ phases:
     commands:
       - echo "Uploading build artifacts to S3..."
       - aws s3 cp dist/ecommerce/ s3://angular-eapp/angular-folder/ --recursive
-
 artifacts:
   files:
     - appspec.yml
-    - scripts/**   # Include deployment scripts
-    - dist/**
+    - "**/*"
   base-directory: dist/ecommerce/
 
 
