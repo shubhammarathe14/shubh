@@ -28,7 +28,8 @@ phases:
 
 artifacts:
   files:
-    - appspec.yml  # Include appspec.yml
+    - appspec.yml 
+    - start.sh   # Include appspec.yml
     - "**/*"
   base-directory: dist/ecommerce/  # Ensure dist/ecommerce is the base directory
 
