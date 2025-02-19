@@ -3,37 +3,29 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "Installing Node.js 16..."
-      - curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+      - echo "Installing Node.js..."
+      - curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
       - sudo apt install -y nodejs
-      - node -v
-      - npm -v
-      - echo "Installing Angular CLI..."
       - npm install -g @angular/cli@15.2.6
-      - echo "Installing dependencies..."
       - npm install --legacy-peer-deps
 
   build:
     commands:
       - echo "Building Angular project..."
       - ng build --configuration=production
-      - echo "Moving appspec.yml and scripts to dist/ecommerce/..."
-      - cp appspec.yml dist/ecommerce/
-      - mkdir -p dist/ecommerce/scripts
-      - cp scripts/start.sh dist/ecommerce/scripts/
 
   post_build:
     commands:
+      - echo "Copying appspec.yml to build directory..."
+      - cp appspec.yml dist/ecommerce/
       - echo "Uploading build artifacts to S3..."
-      - aws s3 cp dist/ecommerce/ s3://angular-eapp/angular-folder/ --recursive
+      - aws s3 cp . s3://angular-eapp/angular-folder/ --recursive
 
 artifacts:
   files:
-    - appspec.yml
-    - scripts/start.sh
-    - "**/*"
-  discard-paths: no
+    - "**/*"  # Ensures package.json is included
   base-directory: .
+
 
 
 
