@@ -3,16 +3,22 @@ os: linux
 files:
   - source: /
     destination: /var/www/html/angular-app
+    overwrite: yes
 
 permissions:
   - object: /var/www/html/angular-app
     owner: ubuntu
     group: ubuntu
     mode: 755
+  - object: /var/www/html/angular-app/.git
+    owner: ubuntu
+    group: ubuntu
+    mode: 700
 
 hooks:
   AfterInstall:
     - location: scripts/start.sh
       timeout: 300
       runas: ubuntu
+
 
