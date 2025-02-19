@@ -1,28 +1,30 @@
 #!/bin/bash
-set -e  # Exit on error
+set -e  # Exit if any command fails
 
+DEPLOYMENT_DIR="/opt/codedeploy-agent/deployment-root/latest/deployment-archive"
+TARGET_DIR="/var/www/html/angular-app"
 
-echo "Starting deployment..."
+echo "🚀 Starting deployment..."
+echo "📂 Checking deployment directory..."
 
-# Ensure directory exists with correct permissions
-sudo mkdir -p /var/www/angular-app
-sudo chown -R ubuntu:ubuntu /var/www/angular-app
-sudo chmod -R 755 /var/www/angular-app
+# Ensure the deployment archive exists before proceeding
+if [ ! -d "$DEPLOYMENT_DIR" ]; then
+    echo "❌ Deployment archive not found at $DEPLOYMENT_DIR"
+    exit 1
+fi
 
-echo "Copying application files..."
-rsync -av --exclude='.git' --exclude='node_modules' /opt/codedeploy-agent/deployment-root/latest/deployment-archive/ /var/www/angular-app/
+echo "📂 Deployment archive found. Copying files..."
 
-echo "Installing dependencies..."
-cd /var/www/angular-app
-npm install --legacy-peer-deps
+# Ensure the target directory exists and has proper permissions
+sudo mkdir -p "$TARGET_DIR"
+sudo chown -R ubuntu:ubuntu "$TARGET_DIR"
+sudo chmod -R 755 "$TARGET_DIR"
 
-echo "Building Angular application..."
-ng build --configuration=production
+# Copy files from the archive to the target directory
+sudo rsync -av --delete "$DEPLOYMENT_DIR/" "$TARGET_DIR/"
 
-echo "Starting Angular application..."
-nohup npx http-server -p 80 dist/ecommerce/ &
+echo "✅ Deployment completed successfully!"
 
-echo "Deployment complete!"
 
 
 
