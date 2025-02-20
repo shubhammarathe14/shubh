@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e  # Exit if any command fails
 
-DEPLOYMENT_DIR="/opt/codedeploy-agent/deployment-root/latest/deployment-archive"
+# Find the most recent deployment directory
+DEPLOYMENT_DIR=$(ls -td /opt/codedeploy-agent/deployment-root/d-* | head -1)/deployment-archive
 TARGET_DIR="/var/www/html/angular-app"
 
 echo "🚀 Starting deployment..."
@@ -24,7 +25,6 @@ sudo chmod -R 755 "$TARGET_DIR"
 sudo rsync -av --delete "$DEPLOYMENT_DIR/" "$TARGET_DIR/"
 
 echo "✅ Deployment completed successfully!"
-
 
 
 
