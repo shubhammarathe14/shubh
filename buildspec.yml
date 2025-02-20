@@ -1,3 +1,30 @@
+# version: 0.2
+
+# phases:
+#   install:
+#     commands:
+#       - echo "Installing Node.js..."
+#       - curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+#       - sudo apt install -y nodejs
+#       - npm install -g @angular/cli@15.2.6
+#       - npm install --legacy-peer-deps
+
+#   build:
+#     commands:
+#       - echo "Building Angular project..."
+#       - ng build --configuration=production
+
+#   post_build:
+#     commands:
+#       - echo "Copying appspec.yml to build directory..."
+#       - cp appspec.yml dist/ecommerce/
+#       - echo "Uploading build artifacts to S3..."
+#       - aws s3 cp . s3://angular-eapp/angular-folder/ --recursive
+
+# artifacts:
+#   files:
+#     - "**/*"  # Ensures package.json is included
+#   base-directory: .
 version: 0.2
 
 phases:
@@ -5,25 +32,42 @@ phases:
     commands:
       - echo "Installing Node.js..."
       - curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-      - sudo apt install -y nodejs
+      - sudo apt install -y nodejs nginx
       - npm install -g @angular/cli@15.2.6
       - npm install --legacy-peer-deps
+      - echo "Nginx and Node.js installed."
 
   build:
     commands:
       - echo "Building Angular project..."
       - ng build --configuration=production
+      - echo "Creating Nginx config..."
+      - mkdir -p nginx
+      - |
+        cat <<EOT > nginx/nginx.conf
+        server {
+            listen 80;
+            server_name localhost;
+            root /usr/share/nginx/html;
+            index index.html;
+            location / {
+                try_files \$uri /index.html;
+            }
+        }
+        EOT
 
   post_build:
     commands:
       - echo "Copying appspec.yml to build directory..."
       - cp appspec.yml dist/ecommerce/
+      - echo "Copying Nginx config to build directory..."
+      - cp nginx/nginx.conf dist/ecommerce/
       - echo "Uploading build artifacts to S3..."
       - aws s3 cp . s3://angular-eapp/angular-folder/ --recursive
 
 artifacts:
   files:
-    - "**/*"  # Ensures package.json is included
+    - "**/*"
   base-directory: .
 
 
