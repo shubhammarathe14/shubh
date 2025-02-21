@@ -47,7 +47,7 @@ phases:
         cat <<EOT > nginx/nginx.conf
         server {
             listen 80;
-            server_name 3.22.242.57;
+            server_name  /var/www/html/angular-app/dist/ecommerce;
             root /var/www/html/angular-app;
             index index.html;
             location / {
