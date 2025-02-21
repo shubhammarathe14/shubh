@@ -29,7 +29,7 @@
 #!/bin/bash
 set -e  # Exit immediately if a command fails
 
-DEPLOYMENT_DIR="/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_NAME/$DEPLOYMENT_ID/deployment-archive"
+DEPLOYMENT_DIR="/opt/codedeploy-agent/deployment-root/$(basename $(ls -d /opt/codedeploy-agent/deployment-root/*/deployment-archive))"
 TARGET_DIR="/var/www/html/angular-app"
 
 echo "🚀 Starting deployment..."
@@ -45,7 +45,7 @@ echo "📂 Deployment archive found. Copying files..."
 
 # Ensure the target directory exists and has proper permissions
 sudo mkdir -p "$TARGET_DIR"
-sudo chown -R ubuntu:nginx "$TARGET_DIR"
+sudo chown -R ubuntu:ubuntu "$TARGET_DIR"
 sudo chmod -R 755 "$TARGET_DIR"
 
 # Copy files from the archive to the target directory
@@ -55,6 +55,7 @@ echo "🔄 Restarting Nginx..."
 sudo systemctl restart nginx
 
 echo "✅ Deployment completed successfully!"
+
 
 
 
