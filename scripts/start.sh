@@ -26,11 +26,17 @@
 
 # echo "✅ Deployment completed successfully!"
 
-#!/bin/bash
 set -e  # Exit immediately if a command fails
 
 DEPLOYMENT_BASE="/opt/codedeploy-agent/deployment-root/"
-DEPLOYMENT_DIR=$(find "$DEPLOYMENT_BASE" -maxdepth 2 -type d -name "deployment-archive" | head -n 1)
+echo "🔍 Searching for deployment-archive in $DEPLOYMENT_BASE"
+
+# Find the latest deployment archive path dynamically
+DEPLOYMENT_DIR=$(find "$DEPLOYMENT_BASE" -type d -name "deployment-archive" | tail -n 1)
+
+# Debugging: Log found deployment directories
+echo "📝 Found deployment directories:"
+find "$DEPLOYMENT_BASE" -type d -name "deployment-archive"
 
 if [ -z "$DEPLOYMENT_DIR" ]; then
     echo "❌ Deployment archive directory not found in $DEPLOYMENT_BASE"
@@ -54,7 +60,6 @@ echo "🔄 Restarting Nginx..."
 sudo systemctl restart nginx
 
 echo "✅ Deployment completed successfully!"
-
 
 
 
