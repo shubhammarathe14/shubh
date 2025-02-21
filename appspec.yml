@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /var/www/html/angular-app
+    destination: /opt/codedeploy-agent/deployment-root/eapp-application/
     overwrite: yes
 
 permissions:
