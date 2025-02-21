@@ -29,19 +29,18 @@
 #!/bin/bash
 set -e  # Exit immediately if a command fails
 
-DEPLOYMENT_DIR="/opt/codedeploy-agent/deployment-root/$(basename $(ls -d /opt/codedeploy-agent/deployment-root/*/deployment-archive))"
-TARGET_DIR="/var/www/html/angular-app"
+DEPLOYMENT_BASE="/opt/codedeploy-agent/deployment-root/"
+DEPLOYMENT_DIR=$(find "$DEPLOYMENT_BASE" -maxdepth 2 -type d -name "deployment-archive" | head -n 1)
 
-echo "🚀 Starting deployment..."
-echo "📂 Checking deployment directory: $DEPLOYMENT_DIR"
-
-# Ensure the deployment archive exists
-if [ ! -d "$DEPLOYMENT_DIR" ]; then
-    echo "❌ Deployment archive not found at $DEPLOYMENT_DIR"
+if [ -z "$DEPLOYMENT_DIR" ]; then
+    echo "❌ Deployment archive directory not found in $DEPLOYMENT_BASE"
     exit 1
 fi
 
-echo "📂 Deployment archive found. Copying files..."
+TARGET_DIR="/var/www/html/angular-app"
+
+echo "🚀 Starting deployment..."
+echo "📂 Deployment directory found: $DEPLOYMENT_DIR"
 
 # Ensure the target directory exists and has proper permissions
 sudo mkdir -p "$TARGET_DIR"
@@ -55,6 +54,7 @@ echo "🔄 Restarting Nginx..."
 sudo systemctl restart nginx
 
 echo "✅ Deployment completed successfully!"
+
 
 
 
