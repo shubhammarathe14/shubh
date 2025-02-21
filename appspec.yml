@@ -1,8 +1,8 @@
 version: 0.0
 os: linux
 files:
-  - source: /
-    destination: /opt/codedeploy-agent/deployment-root/eapp-application/
+  - source: dist/ecommerce
+    destination: /var/www/html/angular-app
     overwrite: yes
 
 permissions:
