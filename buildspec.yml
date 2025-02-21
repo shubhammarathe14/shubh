@@ -1,3 +1,4 @@
+
 # version: 0.2
 
 # phases:
@@ -5,37 +6,55 @@
 #     commands:
 #       - echo "Installing Node.js..."
 #       - curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-#       - sudo apt install -y nodejs
+#       - sudo apt install -y nodejs nginx
 #       - npm install -g @angular/cli@15.2.6
 #       - npm install --legacy-peer-deps
+#       - echo "Nginx and Node.js installed."
 
 #   build:
 #     commands:
 #       - echo "Building Angular project..."
 #       - ng build --configuration=production
+#       - echo "Creating Nginx config..."
+#       - mkdir -p nginx
+#       - |
+#         cat <<EOT > nginx/nginx.conf
+#         server {
+#             listen 80;
+#             server_name  /var/www/html/angular-app/dist/ecommerce;
+#             root /var/www/html/angular-app;
+#             index index.html;
+#             location / {
+#                 try_files \$uri /index.html;
+#             }
+#         }
+#         EOT
 
 #   post_build:
 #     commands:
 #       - echo "Copying appspec.yml to build directory..."
-#       - cp appspec.yml dist/ecommerce/
+#       - echo "Copying Nginx config to build directory..."
+#       - cp nginx/nginx.conf dist/ecommerce/
 #       - echo "Uploading build artifacts to S3..."
 #       - aws s3 cp . s3://angular-eapp/angular-folder/ --recursive
 
 # artifacts:
 #   files:
-#     - "**/*"  # Ensures package.json is included
+#     - "**/*"
 #   base-directory: .
+
+
 version: 0.2
 
 phases:
   install:
     commands:
-      - echo "Installing Node.js..."
+      - echo "Installing dependencies..."
       - curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
       - sudo apt install -y nodejs nginx
       - npm install -g @angular/cli@15.2.6
-      - npm install --legacy-peer-deps
-      - echo "Nginx and Node.js installed."
+      - npm ci --legacy-peer-deps
+      - echo "Dependencies installed."
 
   build:
     commands:
@@ -47,29 +66,30 @@ phases:
         cat <<EOT > nginx/nginx.conf
         server {
             listen 80;
-            server_name  /var/www/html/angular-app/dist/ecommerce;
-            root /var/www/html/angular-app;
+            server_name 3.22.242.57;
+
+            root /var/www/html/angular-app/dist/ecommerce;
             index index.html;
+            
             location / {
-                try_files \$uri /index.html;
+                try_files \$uri \$uri/ /index.html;
             }
+
+            error_page 404 /index.html;
         }
         EOT
 
   post_build:
     commands:
-      - echo "Copying appspec.yml to build directory..."
-      - echo "Copying Nginx config to build directory..."
+      - echo "Copying files to build directory..."
       - cp nginx/nginx.conf dist/ecommerce/
       - echo "Uploading build artifacts to S3..."
-      - aws s3 cp . s3://angular-eapp/angular-folder/ --recursive
+      - aws s3 cp dist/ecommerce/ s3://angular-eapp/angular-folder/ --recursive
 
 artifacts:
   files:
     - "**/*"
-  base-directory: .
-
-
+  base-directory: dist/ecommerce
 
 
 
