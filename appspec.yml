@@ -11,16 +11,21 @@ permissions:
     owner: ubuntu
     group: ubuntu
     mode: 755
+    type:
+      - directory
+      - file
 
 hooks:
   BeforeInstall:
     - location: scripts/cleanup.sh
       timeout: 300
       runas: root
+
   AfterInstall:
     - location: scripts/start.sh
       timeout: 300
-      runas: ubuntu
+      runas: root
+
 
 
 
