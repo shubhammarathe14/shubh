@@ -59,7 +59,6 @@ phases:
   post_build:
     commands:
       - echo "Copying appspec.yml to build directory..."
-      - cp appspec.yml dist/ecommerce/
       - echo "Copying Nginx config to build directory..."
       - cp nginx/nginx.conf dist/ecommerce/
       - echo "Uploading build artifacts to S3..."
