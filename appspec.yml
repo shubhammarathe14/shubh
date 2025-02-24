@@ -2,11 +2,11 @@ version: 0.0
 os: linux
 
 files:
-  - source: dist/ecommerce
+  - source: dist
     destination: /var/www/html/angular-app
     overwrite: yes
 
-  - source: dist/ecommerce/nginx.conf
+  - source: dist/nginx.conf
     destination: /etc/nginx/
     overwrite: yes
 
