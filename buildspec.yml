@@ -68,7 +68,7 @@ phases:
             listen 80;
             server_name 3.22.242.57;
 
-            root /var/www/html/angular-app/dist/ecommerce;
+            root /var/www/html/angular-app/dist;
             index index.html;
             
             location / {
@@ -82,7 +82,7 @@ phases:
   post_build:
     commands:
       - echo "Copying files to build directory..."
-      - cp nginx/nginx.conf dist/ecommerce/
+      - cp nginx/nginx.conf dist/
       - echo "Uploading build artifacts to S3..."
       - aws s3 cp dist/ecommerce/ s3://angular-eapp/angular-folder/ --recursive
 
