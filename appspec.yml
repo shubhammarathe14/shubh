@@ -6,6 +6,10 @@ files:
     destination: /var/www/html/angular-app
     overwrite: yes
 
+  - source: dist/ecommerce/nginx.conf
+    destination: /etc/nginx/
+    overwrite: yes
+
 permissions:
   - object: /var/www/html/angular-app
     owner: ubuntu
