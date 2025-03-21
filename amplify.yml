@@ -9,14 +9,17 @@ frontend:
         - echo "Dependencies installed."
     build:
       commands:
+        - echo "Checking Angular CLI installation..."
+        - ng version  # Debugging step to verify Angular CLI is installed
         - echo "Building Angular project..."
         - ng build --configuration=production
   artifacts:
-    baseDirectory: dist/ecommerce  # Ensure this matches your Angular build output folder
+    baseDirectory: dist/ecommerce  # Ensure this matches your Angular output folder
     files:
       - "**/*"
   cache:
     paths:
       - node_modules/**
+
 
   
