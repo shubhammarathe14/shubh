@@ -1,16 +1,22 @@
 version: 1
 frontend:
   phases:
-    preBuild:
+    install:
       commands:
-        - npm ci
+        - echo "Installing dependencies..."
+        - npm install -g @angular/cli@15.2.6
+        - npm ci --legacy-peer-deps
+        - echo "Dependencies installed."
     build:
       commands:
-        - npm run build -- --configuration=production
+        - echo "Building Angular project..."
+        - ng build --configuration=production
   artifacts:
-    baseDirectory: dist/my-angular-app  # Ensure this matches your actual output directory
+    baseDirectory: dist/ecommerce  # Ensure this matches your Angular build output folder
     files:
-      - '**/*'
+      - "**/*"
   cache:
     paths:
-      - node_modules/**  
+      - node_modules/**
+
+  
